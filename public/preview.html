@@ -606,6 +606,8 @@ downloadBtn.onclick = async () => {
 
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  sessionStorage.setItem('used', '1');
+
   downloadBtn.disabled = true;
 
 };
@@ -638,6 +640,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
