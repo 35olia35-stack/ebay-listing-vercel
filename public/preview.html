@@ -552,11 +552,6 @@ if (paid && !sessionStorage.getItem('used')) {
   localStorage.setItem('genLimit', '50');
 }
 
-// разблокировка ТОЛЬКО при ?paid=1
-if (new URLSearchParams(location.search).get('paid') === '1') {
-  
-  localStorage.setItem('genLimit', '50');
-}
 
 
 
@@ -640,6 +635,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
