@@ -605,10 +605,7 @@ const LINK_CLASSIC = 'https://www.paypal.com/ncp/payment/3JC3NBKPGDDBU';
 const LINK_MODERN  = 'https://www.paypal.com/ncp/payment/2EZAK4LXVSG9Q';
 
 // 1) после оплаты разблокируем
-if (new URLSearchParams(location.search).get('paid') === '1') {
-  localStorage.setItem('isPaid', 'true');
-  downloadBtn.disabled = false;
-}
+
 
 // 2) если уже оплатили ранее — тоже разблокируем
 if (localStorage.getItem('isPaid') === 'true') {
@@ -626,6 +623,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
