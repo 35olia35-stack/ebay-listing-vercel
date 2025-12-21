@@ -550,6 +550,7 @@ downloadBtn.disabled = true;
 if (paid && !sessionStorage.getItem('used')) {
   downloadBtn.disabled = false;
   localStorage.setItem('genLimit', '50');
+  history.replaceState({}, '', location.pathname);
 }
 
 
@@ -635,6 +636,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
