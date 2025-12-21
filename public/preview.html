@@ -546,6 +546,11 @@ else area.innerHTML = '<b>Error: template not specified</b>';
 
 
 downloadBtn.disabled = true;
+// разблокировка ТОЛЬКО при ?paid=1
+if (new URLSearchParams(location.search).get('paid') === '1') {
+  downloadBtn.disabled = false;
+  localStorage.setItem('genLimit', '50');
+}
 
 
 
@@ -623,6 +628,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
