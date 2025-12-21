@@ -314,6 +314,7 @@ Data priority rules:
   } catch (e) {
     return res.status(500).json({ error: "Server exception", details: String(e) });
   }
-});
+}
+
 
 
