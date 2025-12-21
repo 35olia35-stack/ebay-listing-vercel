@@ -600,6 +600,8 @@ downloadBtn.onclick = async () => {
 
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  downloadBtn.disabled = true;
+
 };
 
 
@@ -628,6 +630,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
