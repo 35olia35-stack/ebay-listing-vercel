@@ -250,13 +250,25 @@ const btn = document.getElementById('generateBtn');
 
 let genState = JSON.parse(localStorage.getItem('genState')) || {
   count: 0,
-  tipShown: false
+  tipShown: false,
+  resetAt: Date.now() + 24 * 60 * 60 * 1000
 };
+
 
 function saveState(){
   localStorage.setItem('genState', JSON.stringify(genState));
 }
+// --- auto reset after 24h ---
+if (genState.resetAt && Date.now() > genState.resetAt) {
+  genState = {
+    count: 0,
+    tipShown: false,
+    resetAt: Date.now() + 24 * 60 * 60 * 1000
+  };
+  saveState();
+}
 
+  
 // ===== Phases =====
 function getPhase(count){
   if (count <= 30) return 1;
@@ -392,4 +404,5 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
