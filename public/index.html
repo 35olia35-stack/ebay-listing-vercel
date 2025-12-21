@@ -294,6 +294,13 @@ function getPhaseMessage(phase){
 
 document.getElementById('generateBtn').addEventListener('click', () => {
 const btn = document.getElementById('generateBtn');
+// HARD STOP before generation (51+)
+if (genState.count >= MAX_FREE) {
+  btn.textContent = 'Come back tomorrow';
+  btn.disabled = true;
+  btn.title = "You've reached today's free limit.";
+  return;
+}
   
 
 const tpl = document.querySelector('input[name="tpl"]:checked')?.value;
@@ -356,10 +363,18 @@ fetch('/api/generate', {
 
 
        // DEV MODE: disable daily limit
-btn.textContent = BTN_DEFAULT;
+// FINAL: enforce daily limit
 btn.classList.remove('loading');
 
-btn.disabled = false;
+if (genState.count >= MAX_FREE) {
+  btn.textContent = 'Come back tomorrow';
+  btn.disabled = true;
+  btn.title = "You've reached today's free limit.";
+} else {
+  btn.textContent = BTN_DEFAULT;
+  btn.disabled = false;
+}
+
 
       }, MSG_DELAY);
     });
@@ -377,3 +392,4 @@ btn.disabled = false;
 </body>
 
 </html>
+
