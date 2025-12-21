@@ -600,10 +600,36 @@ downloadBtn.onclick = async () => {
   URL.revokeObjectURL(url);
 };
 </script>
+<script>
+const payBtn = document.getElementById('payBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
+const LINK_CLASSIC = 'https://www.paypal.com/ncp/payment/3JC3NBKPGDDBU';
+const LINK_MODERN  = 'https://www.paypal.com/ncp/payment/2EZAK4LXVSG9Q';
+
+// 1) после оплаты разблокируем
+if (new URLSearchParams(location.search).get('paid') === '1') {
+  localStorage.setItem('isPaid', 'true');
+  downloadBtn.disabled = false;
+}
+
+// 2) если уже оплатили ранее — тоже разблокируем
+if (localStorage.getItem('isPaid') === 'true') {
+  downloadBtn.disabled = false;
+}
+
+// 3) клик по оплате → нужная ссылка
+payBtn.onclick = () => {
+  const tpl = (typeof merged !== 'undefined' && merged.tpl) ? merged.tpl : 'classic';
+  const link = (tpl === 'classic') ? LINK_CLASSIC : LINK_MODERN;
+  window.open(link, '_blank');
+};
+</script>
 
 </body>
 
 </html>
+
 
 
 
