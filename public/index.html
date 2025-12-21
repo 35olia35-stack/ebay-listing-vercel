@@ -336,6 +336,7 @@ const mainText = document.getElementById('mainText').value.trim();
 
 
 fetch('/api/generate', {
+  localStorage.setItem('genLimit', String(Number(localStorage.getItem('genLimit') || 0) - 1));
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -407,6 +408,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
