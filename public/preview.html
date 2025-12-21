@@ -134,10 +134,8 @@ hr{
   One-time payment: <b id="priceValue">$2.99</b>
 </div>
 
-  <button class="paypal-btn" id="payBtn">
-    <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png">
-    Pay with PayPal
-  </button>
+ <div id="paypal-button-container"></div>
+
   <button class="download-btn" id="downloadBtn" disabled>Download your listing</button>
 </div>
 
@@ -544,9 +542,7 @@ else area.innerHTML = '<b>Error: template not specified</b>';
 
 
 downloadBtn.disabled = true;
-payBtn.onclick = () => {
-  alert('Payment required to download.');
-};
+
 
 
 
@@ -612,3 +608,4 @@ downloadBtn.onclick = async () => {
 </body>
 
 </html>
+
