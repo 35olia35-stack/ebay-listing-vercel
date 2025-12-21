@@ -361,6 +361,7 @@ fetch('/api/generate', {
 
   const json = await res.json();
   localStorage.setItem('listingData', JSON.stringify(json));
+localStorage.setItem('genLimit', String(Number(localStorage.getItem('genLimit')) - 1));
 
   genState.count++;
   saveState();
@@ -408,6 +409,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
