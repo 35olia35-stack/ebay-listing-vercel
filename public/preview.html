@@ -171,6 +171,7 @@ hr{
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=ELZ6x8p3bUNHz_9s32vx1cza8yKAB9GqIW07G-f7RaFvSnWfE0tKRm4WQ6DdsTsxokA_OuRB12CyEsfy&currency=USD&components=buttons"></script>
 
 <script>
 let currentRenderedHtml = '';
@@ -596,51 +597,33 @@ downloadBtn.onclick = async () => {
   URL.revokeObjectURL(url);
 };
 </script>
-
-
-<script>
 <script>
 paypal.Buttons({
   createOrder: function (data, actions) {
     return actions.order.create({
       purchase_units: [{
-        amount: {
-          value: price.toFixed(2)
-        }
+        amount: { value: price.toFixed(2) }
       }]
     });
   },
-
   onApprove: function (data, actions) {
     return actions.order.capture().then(function () {
-
-      // фиксируем успешную оплату
       localStorage.setItem('isPaid', 'true');
-
-      // разблокируем Download
       downloadBtn.disabled = false;
-
       alert('Payment successful. You can now download.');
     });
   },
-
   onError: function (err) {
     console.error(err);
     alert('Payment failed. Try again.');
   }
-
 }).render('#paypal-button-container');
 </script>
-
-</script>
-
-
-<script src="https://www.paypal.com/sdk/js?client-id=ELZ6x8p3bUNHz_9s32vx1cza8yKAB9GqIW07G-f7RaFvSnWfE0tKRm4WQ6DdsTsxokA_OuRB12CyEsfy&currency=USD&components=buttons"></script>
-
 
 </body>
 
 </html>
+
 
 
 
