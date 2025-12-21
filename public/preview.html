@@ -596,6 +596,22 @@ downloadBtn.onclick = async () => {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 };
+  // старт: Download всегда заблокирован
+downloadBtn.disabled = true;
+
+// если вернулись после оплаты
+if (new URLSearchParams(location.search).get('paid') === '1') {
+  // разрешаем ОДНО скачивание
+  sessionStorage.setItem('paidOnce', 'true');
+  downloadBtn.disabled = false;
+
+  // сбрасываем лимит генераций
+  localStorage.setItem('genLimit', '50');
+
+  // убираем ?paid=1 из адреса
+  history.replaceState({}, '', location.pathname);
+}
+
 </script>
 <script>
 const payBtn = document.getElementById('payBtn');
@@ -621,6 +637,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
