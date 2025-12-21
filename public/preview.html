@@ -551,10 +551,7 @@ downloadBtn.disabled = true;
 
 
 downloadBtn.onclick = async () => {
-  if (localStorage.getItem('isPaid') !== 'true') {
-  alert('Please complete payment to download.');
-  return;
-}
+ 
 
   
   if (downloadBtn.disabled) return;
@@ -629,6 +626,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
