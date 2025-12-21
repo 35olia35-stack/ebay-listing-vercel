@@ -599,6 +599,38 @@ downloadBtn.onclick = async () => {
 
 
 <script>
+<script>
+paypal.Buttons({
+  createOrder: function (data, actions) {
+    return actions.order.create({
+      purchase_units: [{
+        amount: {
+          value: price.toFixed(2)
+        }
+      }]
+    });
+  },
+
+  onApprove: function (data, actions) {
+    return actions.order.capture().then(function () {
+
+      // фиксируем успешную оплату
+      localStorage.setItem('isPaid', 'true');
+
+      // разблокируем Download
+      downloadBtn.disabled = false;
+
+      alert('Payment successful. You can now download.');
+    });
+  },
+
+  onError: function (err) {
+    console.error(err);
+    alert('Payment failed. Try again.');
+  }
+
+}).render('#paypal-button-container');
+</script>
 
 </script>
 
@@ -608,4 +640,5 @@ downloadBtn.onclick = async () => {
 </body>
 
 </html>
+
 
