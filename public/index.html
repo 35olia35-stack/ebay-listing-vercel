@@ -309,12 +309,14 @@ function getPhaseMessage(phase){
 document.getElementById('generateBtn').addEventListener('click', () => {
 const btn = document.getElementById('generateBtn');
 // HARD STOP before generation (51+)
-if (genState.count >= MAX_FREE) {
+const left = Number(localStorage.getItem('genLimit') || 0);
+if (left <= 0) {
   btn.textContent = 'Come back tomorrow';
   btn.disabled = true;
   btn.title = "You've reached today's free limit.";
   return;
 }
+
   
 
 const tpl = document.querySelector('input[name="tpl"]:checked')?.value;
@@ -406,6 +408,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
