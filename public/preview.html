@@ -543,11 +543,20 @@ else area.innerHTML = '<b>Error: template not specified</b>';
 
 
 
+downloadBtn.disabled = true;
+payBtn.onclick = () => {
+  alert('Payment required to download.');
+};
 
-payBtn.onclick=()=>{localStorage.setItem('isPaid','true');downloadBtn.disabled=false};
 
 
 downloadBtn.onclick = async () => {
+  if (localStorage.getItem('isPaid') !== 'true') {
+  alert('Please complete payment to download.');
+  return;
+}
+
+  
   if (downloadBtn.disabled) return;
 
   const zip = new JSZip();
@@ -601,4 +610,5 @@ downloadBtn.onclick = async () => {
 
 
 </body>
+
 </html>
