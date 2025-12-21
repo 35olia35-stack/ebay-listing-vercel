@@ -609,6 +609,8 @@ downloadBtn.onclick = async () => {
 <script>
 const payBtn = document.getElementById('payBtn');
 const downloadBtn = document.getElementById('downloadBtn');
+downloadBtn.disabled = true;
+  
 
 const LINK_CLASSIC = 'https://www.paypal.com/ncp/payment/3JC3NBKPGDDBU';
 const LINK_MODERN  = 'https://www.paypal.com/ncp/payment/2EZAK4LXVSG9Q';
@@ -630,6 +632,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
