@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Listing Preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#ffffff;
+  color:#111827;
+}
+.wrapper{
+  max-width:1100px;
+  margin:0 auto;
+  padding:24px 16px 60px;
+}
+hr{
+  margin:40px 0;
+  border:none;
+  border-top:2px solid #d0d7de;
+}
+
+/* ===== COLOR VARIABLES ===== */
+:root{
+  --primary:#1f3c88;
+  --light:#eaf1ff;
+  --soft:#f1f5ff;
+  --accent:#1f3c88;
+}
+
+/* ===== COLOR SWITCHER ===== */
+.color-switcher{margin-top:28px}
+.color-switcher h4{margin:0 0 14px;font-size:18px}
+.color-buttons{display:flex;gap:14px;flex-wrap:wrap}
+.color-btn{
+  min-width:150px;
+  padding:14px 18px;
+  border-radius:14px;
+  border:2px solid transparent;
+  font-size:15px;
+  font-weight:700;
+  color:#fff;
+  cursor:pointer;
+}
+.color-btn.active{
+  border-color:#111827;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+
+/* ===== SERVICE BLOCKS ===== */
+.service{
+  background:#eef5fb;
+  border-radius:14px;
+  padding:24px;
+  margin-bottom:24px;
+}
+.service h3{margin:0 0 14px;font-size:20px}
+.service p{margin:0 0 12px;line-height:1.5}
+
+/* ===== PAYPAL ===== */
+.paypal-price{font-size:16px;font-weight:700;margin-bottom:12px}
+.paypal-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:#ffc439;
+  border:none;
+  border-radius:10px;
+  padding:14px 22px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+.paypal-btn img{height:24px}
+.download-btn{
+  margin-top:16px;
+  display:block;
+  padding:12px 18px;
+  border-radius:10px;
+  border:1px solid #94a3b8;
+  background:#ffffff;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+}
+.download-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ===== FEEDBACK ===== */
+.feedback input,
+.feedback textarea{
+  width:100%;
+  margin-bottom:12px;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid #94a3b8;
+  font-size:14px;
+}
+.feedback button{
+  padding:12px 18px;
+  border-radius:10px;
+  border:none;
+  background:#2563eb;
+  color:#fff;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+}
+.error{color:#b91c1c;font-size:13px;margin-bottom:10px}
+.success{color:#166534;font-size:14px;margin-top:10px}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<div id="templateArea"></div>
+
+
+
+<div id="colorSwitcher" class="color-switcher" style="display:none;">
+  <h4>Choose color style</h4>
+  <div class="color-buttons" id="colorButtons"></div>
+</div>
+
+<hr>
+
+<div class="service">
+  <h3>Pay with PayPal</h3>
+  <div class="paypal-price" id="priceLine">
+  One-time payment: <b id="priceValue">$2.99</b>
+</div>
+
+  <button class="paypal-btn" id="payBtn">
+    <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png">
+    Pay with PayPal
+  </button>
+  <button class="download-btn" id="downloadBtn" disabled>Download your listing</button>
+</div>
+
+<div class="service">
+  <h3>Optional upgrades (done for you)</h3>
+
+  <p>Need more than just a clean description?</p>
+
+  <p>
+    We can enhance your listing so it looks professional, ranks better in search,
+    and converts more buyers.
+  </p>
+
+  <p><b>Available upgrades:</b></p>
+
+  <p>
+    • <b>SEO keyword expansion</b> — optimized title and search-focused wording<br>
+    • <b>Photos in description</b> — images placed between content sections<br>
+    • <b>Image cleanup</b> — background removal and basic enhancement
+  </p>
+</div>
+
+<div class="service feedback">
+  <h3>Feedback</h3>
+  <div class="error" id="fbError"></div>
+  <input id="fbEmail" type="email" placeholder="Your email">
+  <input id="fbName" placeholder="Your name (optional)">
+  <textarea id="fbMessage" rows="4" placeholder="What can be improved?"></textarea>
+  <button onclick="sendFeedback()">Send feedback</button>
+  <div class="success" id="fbSuccess"></div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+let currentRenderedHtml = '';
+console.log(currentRenderedHtml.slice(0,120));
+
+
+
+const data = JSON.parse(localStorage.getItem('listingData') || '{}');
+
+
+
+// FIX #1: flatten facts so Shipping & Delivery works
+const merged = {
+  ...(data || {}),
+  ...((data && data.aiInput) ? data.aiInput : {}),
+  ...((data && data.facts) ? data.facts : {})
+};
+
+// FIX #3: normalize subtitle for Modern / SEO
+if (!merged.subtitle) {
+  merged.subtitle = merged.tagline || '';
+}
+
+// FIX #4: support capitalized Subtitle used in templates
+if (merged.subtitle && !merged.Subtitle) {
+  merged.Subtitle = merged.subtitle;
+}
+
+// FIX #5: support capitalized Title / Subtitle used in templates
+if (merged.title && !merged.Title) merged.Title = merged.title;
+if (merged.subtitle && !merged.Subtitle) merged.Subtitle = merged.subtitle;
+
+
+const tpl = merged.tpl || 'classic';
+
+const PRICE_BY_TPL = {
+  classic: 1.99,
+  modern: 2.99,
+  seo: 2.99
+};
+
+const price = PRICE_BY_TPL[tpl] ?? 2.99;
+document.getElementById('priceValue').textContent = `$${price.toFixed(2)}`;
+
+
+
+const area = document.getElementById('templateArea');
+const switcher = document.getElementById('colorSwitcher');
+const btns = document.getElementById('colorButtons');
+function fillTemplate(template, data){
+  return template
+    .replace(
+      /<[^>]*data-if="(.*?)"[^>]*>[\s\S]*?<\/[^>]*>/g,
+      (block, key) => {
+        const k = key.trim();
+        return data[k] ? block : '';
+      }
+    )
+    .replace(/{{(.*?)}}/g, (_, key) => {
+      const k = key.trim();
+      return data[k] ? data[k] : '';
+    });
+}
+
+
+
+
+function applyTheme(t){
+  document.documentElement.style.setProperty('--primary',t.primary);
+  document.documentElement.style.setProperty('--light',t.light);
+  document.documentElement.style.setProperty('--soft',t.soft);
+  document.documentElement.style.setProperty('--accent',t.accent);
+}
+function buildButtons(set){
+  switcher.style.display='block';
+  Object.entries(set).forEach(([n,v],i)=>{
+    const b=document.createElement('div');
+    b.className='color-btn'+(i===0?' active':'');
+    b.style.background=v.primary;
+    b.textContent=n;
+    b.onclick=()=>{
+      document.querySelectorAll('.color-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      applyTheme(v);
+    };
+    btns.appendChild(b);
+    if(i===0) applyTheme(v);
+  });
+}
+
+/* ===== TEMPLATES ===== */
+
+const CLASSIC = `
+<div style="max-width:100%; font-family:Arial, Helvetica, sans-serif; color:#222; line-height:1.5;">
+
+<!-- IMAGE_BLOCK: hero -->
+  
+<div style="background:#eef5fb; padding:18px 22px; border-radius:6px;">
+    <h1 style="margin:0; font-size:22px; font-weight:bold;">{{Title}}</h1>
+  </div>
+
+  <hr style="margin:26px 0; border:none; border-top:2px solid #d0d7de;">
+
+  <div style="padding:0 22px;">
+  
+<!-- IMAGE_BLOCK: highlights -->
+  
+
+<h2 style="margin:0 0 8px; font-size:18px;">Key Highlights</h2>
+    <ul>
+  <li data-if="highlight_1">{{highlight_1}}</li>
+  <li data-if="highlight_2">{{highlight_2}}</li>
+  <li data-if="highlight_3">{{highlight_3}}</li>
+  <li data-if="highlight_4">{{highlight_4}}</li>
+</ul>
+
+  </div>
+
+ <hr style="margin:26px 0; border:none; border-top:2px solid #d0d7de;">
+
+<div style="padding:0 22px;">
+  <!-- IMAGE_BLOCK: description -->
+  <h2 style="margin:0 0 8px; font-size:18px; font-weight:700;">
+  Item Description
+</h2>
+
+
+  <div style="white-space:pre-line;">
+    {{description_paragraph_1}}
+    
+    {{description_paragraph_2}}
+    
+    {{description_paragraph_3}}
+  </div>
+</div>
+
+<hr style="margin:14px 0 10px; border:none; border-top:2px solid #d0d7de;">
+
+
+
+  <div style="padding:0 22px;">
+    <h2 style="margin:0 0 8px; font-size:18px;">Item Details</h2>
+    <ul>
+      <li data-if="condition">Condition: {{condition}}</li>
+      <li data-if="brand">Brand: {{brand}}</li>
+      <li data-if="material">Material: {{material}}</li>
+      <li data-if="color">Color: {{color}}</li>
+      <li data-if="features">Features: {{features}}</li>
+    </ul>
+  </div>
+
+  <hr style="margin:26px 0; border:none; border-top:2px solid #d0d7de;">
+
+  <div style="padding:0 22px;">
+
+<!-- IMAGE_BLOCK: shipping -->
+  
+
+  <h2 style="margin:0 0 8px; font-size:18px;">Shipping & Delivery</h2>
+<span data-if="handling_time">• Handling time: {{handling_time}}<br></span>
+<span data-if="ships_from">• Ships from: {{ships_from}}<br></span>
+<span data-if="estimated_delivery">• Estimated delivery: {{estimated_delivery}}</span>
+
+
+  </div>
+</div>
+`;
+
+const MODERN = `
+<div style="font-family:Arial,Helvetica,sans-serif;width:100%;">
+ 
+<!-- IMAGE_BLOCK: hero -->
+ 
+<div style="background:var(--primary);color:#fff;padding:34px 30px;">
+  <div style="font-size:28px;font-weight:800;">{{Title}}</div>
+
+  <div data-if="Subtitle"
+       style="margin-top:6px;font-size:16px;opacity:.9;">
+    {{Subtitle}}
+  </div>
+</div>
+
+<!-- IMAGE_BLOCK: highlights -->
+
+  <div style="background:var(--light);padding:22px 30px;">
+    <div style="font-weight:700;color:var(--accent);margin-bottom:10px;">Key Highlights</div>
+    <span data-if="highlight_1">✓ {{highlight_1}}<br></span>
+    <span data-if="highlight_2">✓ {{highlight_2}}<br></span>
+     <span data-if="highlight_3">✓ {{highlight_3}}</span>
+
+  </div>
+
+  <div style="background:var(--soft);padding:24px 30px;">
+    <div style="font-weight:700;color:var(--accent);margin-bottom:12px;">Specifications</div>
+<span data-if="brand">• Brand: {{brand}}<br></span>
+<span data-if="model">• Model: {{model}}<br></span>
+<span data-if="color">• Color: {{color}}<br></span>
+<span data-if="material">• Material: {{material}}<br></span>
+<span data-if="condition">• Condition: {{condition}}</span>
+
+  </div>
+ 
+<!-- IMAGE_BLOCK: description -->
+
+  <div style="background:#f7f9ff;padding:26px 30px;">
+    <div style="font-weight:700;color:var(--accent);margin-bottom:12px;">Item Description</div>
+    {{description_paragraph_1}}<br><br>
+    {{description_paragraph_2}}<br><br>
+    {{description_paragraph_3}}
+  </div>
+
+  <div style="background:linear-gradient(to bottom, #f7f9ff, #ffffff);padding:26px 30px;border-top:2px solid #d9e3ff;">
+    <div style="font-weight:700;color:var(--accent);margin-bottom:12px;">Why Buy From Us</div>
+    ✓ Fast handling and careful packing<br>
+    ✓ Clear photos and honest descriptions<br>
+    ✓ Quick and friendly communication<br>
+    ✓ If there’s any issue — just message me, I’ll take care of it
+  </div>
+
+<!-- IMAGE_BLOCK: shipping -->
+
+  
+  <div style="background:var(--primary);color:#fff;padding:26px 30px;">
+    <div style="font-weight:700;margin-bottom:12px;">Shipping & Handling</div>
+<span data-if="handling_time">• Handling time: {{handling_time}}<br></span>
+<span data-if="ships_from">• Ships from: {{ships_from}}<br></span>
+<span data-if="estimated_delivery">• Estimated delivery: {{estimated_delivery}}</span>
+
+  </div>
+</div>
+`;
+
+const SEO = `
+<div style="width:100%; font-family:Arial,Helvetica,sans-serif; line-height:1.6;">
+ 
+<!-- IMAGE_BLOCK: hero -->
+ 
+<div style="background:var(--primary);padding:28px 30px;border-radius:10px;">
+
+    
+<div style="font-size:26px;font-weight:800;color:#f9fafb;">{{Title}}</div>
+    
+
+<div data-if="Subtitle"
+     style="margin-top:8px;font-size:17px;color:#e5e7eb;">
+  {{Subtitle}}
+</div>
+ </div>
+
+<div style="
+  margin-top:24px;
+  background:#ffffff;
+  border-radius:10px;
+  overflow:hidden;
+">
+<!-- IMAGE_BLOCK: opening -->
+
+
+ <div data-if="seo_opening_paragraph"
+     style="margin-top:20px;padding:20px 24px;background:#f9fafb;border-left:6px solid var(--accent);">
+  {{seo_opening_paragraph}}
+</div>
+
+
+ <div style="margin-top:20px;padding:20px 24px;background:#f3f4f6;border-left:6px solid var(--accent);">
+ 
+ <!-- IMAGE_BLOCK: highlights -->
+
+
+<b>Key Highlights</b><br><br>
+
+ <span data-if="highlight_1">✓ {{highlight_1}}<br></span>
+<span data-if="highlight_2">✓ {{highlight_2}}<br></span>
+<span data-if="highlight_3">✓ {{highlight_3}}<br></span>
+<span data-if="highlight_4">✓ {{highlight_4}}</span>
+</div>
+ 
+
+
+
+
+
+  <div style="margin-top:20px;padding:20px 24px;background:#f3f4f6;border-left:6px solid var(--accent);">
+    <b>Specifications</b><br>
+<span data-if="brand">• Brand: {{brand}}<br></span>
+<span data-if="condition">• Condition: {{condition}}<br></span>
+<span data-if="material">• Material: {{material}}<br></span>
+<span data-if="color">• Color: {{color}}<br></span>
+<span data-if="features">• Features: {{features}}</span>
+
+  </div>
+
+  <div style="margin-top:20px;padding:22px 24px;background:#f8fafc;border-left:7px solid var(--primary);">
+    
+<!-- IMAGE_BLOCK: description -->
+
+   
+  <b>Item Description</b><br><br>
+    {{seo_description_paragraph_1}}<br><br>
+    {{seo_description_paragraph_2}}<br><br>
+    {{seo_description_paragraph_3}}
+  </div>
+
+  <div style="margin-top:20px;padding:20px 24px;background:#f3f4f6;border-left:6px solid var(--accent);">
+    <b>Why Buy From Us</b><br>
+    ✓ Accurate descriptions and real product photos<br>
+    ✓ Fast handling and careful packaging<br>
+    ✓ Clear communication and support<br>
+    ✓ Issues are resolved, not ignored
+  </div>
+
+  <div style="margin-top:20px;padding:20px 24px;background:#f9fafb;border-left:6px solid var(--accent);">
+    
+<!-- IMAGE_BLOCK: shipping -->
+
+
+<b>Shipping & Delivery</b><br>
+<span data-if="handling_time">• Handling time: {{handling_time}}<br></span>
+<span data-if="ships_from">• Ships from: {{ships_from}}<br></span>
+<span data-if="estimated_delivery">• Estimated delivery: {{estimated_delivery}}</span>
+
+
+  </div>
+
+ <div data-if="seo_long_tail_paragraph"
+     style="margin-top:20px;padding:20px 24px;background:#f3f4f6;border-left:6px solid var(--primary);font-size:14px;">
+  {{seo_long_tail_paragraph}}
+</div>
+
+</div>
+`;
+
+const themes={
+  modern:{
+    Blue:{primary:'#1f3c88',light:'#eaf1ff',soft:'#f1f5ff',accent:'#1f3c88'},
+    Green:{primary:'#166534',light:'#eafaf1',soft:'#f0fdf4',accent:'#166534'},
+    'Dark Pink':{primary:'#8b1d5c',light:'#fde8f1',soft:'#fff1f7',accent:'#8b1d5c'}
+  },
+  seo:{
+    Black:{primary:'#111827',light:'#f3f4f6',soft:'#374151',accent:'#111827'},
+    Purple:{primary:'#4c1d95',light:'#f5f3ff',soft:'#6d28d9',accent:'#6d28d9'},
+    Terracotta:{primary:'#7c2d12',light:'#fff7ed',soft:'#9a3412',accent:'#9a3412'}
+  }
+};
+
+if(tpl==='classic') area.innerHTML = fillTemplate(CLASSIC, merged);
+else if(tpl === 'modern'){ 
+  const htmlBody = fillTemplate(MODERN, merged);
+
+  area.innerHTML = htmlBody;
+  buildButtons(themes.modern);
+
+  currentRenderedHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>eBay Listing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+${htmlBody}
+</body>
+</html>`;
+}
+else if(tpl==='seo'){ area.innerHTML = fillTemplate(SEO, merged); buildButtons(themes.seo); }
+else area.innerHTML = '<b>Error: template not specified</b>';
+
+
+
+
+
+payBtn.onclick=()=>{localStorage.setItem('isPaid','true');downloadBtn.disabled=false};
+
+
+downloadBtn.onclick = async () => {
+  if (downloadBtn.disabled) return;
+
+  const zip = new JSZip();
+  const styles = getComputedStyle(document.documentElement);
+
+  // --- CSS variables snapshot ---
+  const cssVars = `
+<style>
+:root{
+  --primary:${styles.getPropertyValue('--primary').trim()};
+  --light:${styles.getPropertyValue('--light').trim()};
+  --soft:${styles.getPropertyValue('--soft').trim()};
+  --accent:${styles.getPropertyValue('--accent').trim()};
+}
+</style>
+`;
+
+  // --- listing.txt ---
+  zip.file("listing.txt", cssVars + area.innerHTML);
+
+  // --- README.pdf ---
+  const pdfResp = await fetch('/README.pdf');
+  if (!pdfResp.ok) {
+    alert('README.pdf not found');
+    return;
+  }
+  const pdfBuffer = await pdfResp.arrayBuffer();
+  zip.file("README.pdf", pdfBuffer);
+
+  // --- generate & download ---
+  const blob = await zip.generateAsync({ type: "blob" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ebay-listing.zip';
+  document.body.appendChild(a);
+  a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+</script>
+
+
+<script>
+
+</script>
+
+
+
+
+</body>
+</html>
