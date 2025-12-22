@@ -548,12 +548,12 @@ else area.innerHTML = '<b>Error: template not specified</b>';
 
 
 downloadBtn.disabled = true;
-  const paid = new URLSearchParams(location.search).get('paid') === '1';
-if (paid && !sessionStorage.getItem('used')) {
+
+// Разблокировка после оплаты (флаг из index.html)
+if (localStorage.getItem('paidOnce') === '1' && !sessionStorage.getItem('used')) {
   downloadBtn.disabled = false;
-  localStorage.setItem('genLimit', '50');
-  history.replaceState({}, '', location.pathname);
 }
+
 
 
 
@@ -638,6 +638,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
