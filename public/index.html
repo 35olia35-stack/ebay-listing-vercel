@@ -309,9 +309,23 @@ function getPhaseMessage(phase){
 // ===== After successful generation =====
 
 document.getElementById('generateBtn').addEventListener('click', () => {
-const btn = document.getElementById('generateBtn');
+function getGenLeft() {
+  const raw = localStorage.getItem('genLimit');
+
+  // Новый пользователь / новое устройство
+  if (raw === null) {
+    localStorage.setItem('genLimit', '50');
+    return 50;
+  }
+
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? n : 50;
+}
+
+  const btn = document.getElementById('generateBtn');
 // HARD STOP before generation (51+)
-const left = Number(localStorage.getItem('genLimit') || 0);
+const left = getGenLeft();
+
 if (left <= 0) {
   btn.textContent = 'Come back tomorrow';
   btn.disabled = true;
@@ -411,6 +425,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
