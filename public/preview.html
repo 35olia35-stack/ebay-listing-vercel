@@ -635,35 +635,12 @@ localStorage.removeItem('paidToken');
 
 
 </script>
-<script>
-const payBtn = document.getElementById('payBtn');
-const downloadBtn = document.getElementById('downloadBtn');
 
-
-  
-
-const LINK_CLASSIC = 'https://www.paypal.com/ncp/payment/3JC3NBKPGDDBU';
-const LINK_MODERN  = 'https://www.paypal.com/ncp/payment/2EZAK4LXVSG9Q';
-
-// 1) после оплаты разблокируем
-
-
-// 2) если уже оплатили ранее — тоже разблокируем
-
-
-// 3) клик по оплате → нужная ссылка
-payBtn.onclick = () => {
-  const tpl = (typeof merged !== 'undefined' && merged.tpl) ? merged.tpl : 'classic';
-  const link = (tpl === 'classic') ? LINK_CLASSIC : LINK_MODERN;
-  sessionStorage.setItem('returnToPreview','1');
-  window.location.href = link;
-
-};
-</script>
 
 </body>
 
 </html>
+
 
 
 
