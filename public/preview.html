@@ -608,6 +608,7 @@ downloadBtn.onclick = async () => {
   sessionStorage.setItem('used', '1');
 
   downloadBtn.disabled = true;
+localStorage.removeItem('paidToken');
 
 };
 
@@ -648,6 +649,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
