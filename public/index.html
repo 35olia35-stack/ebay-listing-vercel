@@ -324,7 +324,20 @@ function getGenLeft() {
 }
 
   const btn = document.getElementById('generateBtn');
-// HARD STOP before generation (51+)
+// ===== PayPal return handler =====
+if (new URLSearchParams(location.search).get('paid') === '1') {
+  localStorage.setItem('paidOnce', '1');
+  localStorage.setItem('genLimit', '50');
+  history.replaceState({}, '', location.pathname);
+
+  // если платили из preview — вернуться обратно
+  if (sessionStorage.getItem('returnToPreview') === '1') {
+    sessionStorage.removeItem('returnToPreview');
+    window.location.href = '/preview.html';
+  }
+}
+
+  // HARD STOP before generation (51+)
 const left = getGenLeft();
 
 if (left <= 0) {
@@ -426,6 +439,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
