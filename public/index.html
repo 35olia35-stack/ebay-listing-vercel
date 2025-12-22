@@ -326,8 +326,8 @@ function getGenLeft() {
   const btn = document.getElementById('generateBtn');
 // ===== PayPal return handler =====
 if (new URLSearchParams(location.search).get('paid') === '1') {
-  localStorage.setItem('paidOnce', '1');
-  localStorage.setItem('genLimit', '50');
+ localStorage.setItem('paidToken', '1');
+ localStorage.setItem('genLimit', '50');
   history.replaceState({}, '', location.pathname);
 
   // если платили из preview — вернуться обратно
@@ -439,6 +439,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
