@@ -547,7 +547,8 @@ else area.innerHTML = '<b>Error: template not specified</b>';
 
 
 
-downloadBtn.disabled = true;
+downloadBtn.disabled = !localStorage.getItem('paidToken');
+
 
 // Разблокировка после оплаты (флаг из index.html)
 if (localStorage.getItem('paidOnce') === '1' && !sessionStorage.getItem('used')) {
@@ -647,6 +648,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
