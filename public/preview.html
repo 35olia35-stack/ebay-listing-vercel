@@ -615,6 +615,13 @@ downloadBtn.onclick = async () => {
 <script>
 const payBtn = document.getElementById('payBtn');
 const downloadBtn = document.getElementById('downloadBtn');
+// ===== unlock download after payment (on load) =====
+if (
+  localStorage.getItem('paidOnce') === '1' &&
+  !sessionStorage.getItem('used')
+) {
+  downloadBtn.disabled = false;
+}
 
   
 
@@ -640,6 +647,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
