@@ -631,6 +631,7 @@ const LINK_MODERN  = 'https://www.paypal.com/ncp/payment/2EZAK4LXVSG9Q';
 payBtn.onclick = () => {
   const tpl = (typeof merged !== 'undefined' && merged.tpl) ? merged.tpl : 'classic';
   const link = (tpl === 'classic') ? LINK_CLASSIC : LINK_MODERN;
+  sessionStorage.setItem('returnToPreview','1');
   window.open(link, '_blank');
 };
 </script>
@@ -638,6 +639,7 @@ payBtn.onclick = () => {
 </body>
 
 </html>
+
 
 
 
