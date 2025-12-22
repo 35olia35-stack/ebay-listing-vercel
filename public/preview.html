@@ -632,13 +632,15 @@ payBtn.onclick = () => {
   const tpl = (typeof merged !== 'undefined' && merged.tpl) ? merged.tpl : 'classic';
   const link = (tpl === 'classic') ? LINK_CLASSIC : LINK_MODERN;
   sessionStorage.setItem('returnToPreview','1');
-  window.open(link, '_blank');
+  window.location.href = link;
+
 };
 </script>
 
 </body>
 
 </html>
+
 
 
 
