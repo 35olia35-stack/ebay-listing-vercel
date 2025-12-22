@@ -251,12 +251,7 @@ const MAX_FREE = 50;
 const BTN_DEFAULT = 'Generate preview';
 const MSG_DELAY = 2000; // время показа сообщения на кнопке
 const btn = document.getElementById('generateBtn');
-// ===== Handle PayPal return =====
-if (new URLSearchParams(location.search).get('paid') === '1') {
-  localStorage.setItem('paidOnce', '1');
-  localStorage.setItem('genLimit', '50'); // сброс лимита после оплаты
-  history.replaceState({}, '', location.pathname);
-}
+
 
 let genState = JSON.parse(localStorage.getItem('genState')) || {
   count: 0,
@@ -431,6 +426,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
