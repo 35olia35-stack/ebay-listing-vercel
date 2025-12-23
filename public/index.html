@@ -406,7 +406,8 @@ localStorage.setItem('genLimit', String(Number(localStorage.getItem('genLimit'))
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       setTimeout(() => {
-        window.open('/preview.html', '_blank');
+        window.location.href = '/preview.html';
+
 
 
        // DEV MODE: disable daily limit
@@ -439,6 +440,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
