@@ -307,6 +307,9 @@ const MAX_FREE = 50;
 const BTN_DEFAULT = 'Generate preview';
 const MSG_DELAY = 2000; // время показа сообщения на кнопке
 const btn = document.getElementById('generateBtn');
+btn.addEventListener('click', () => {
+  fbq('track', 'Lead');
+});
 
 
 let genState = JSON.parse(localStorage.getItem('genState')) || {
@@ -503,6 +506,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
