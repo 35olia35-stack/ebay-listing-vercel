@@ -326,7 +326,8 @@ const nextMidnightET =
 let genState = JSON.parse(localStorage.getItem('genState')) || {
   count: 0,
   tipShown: false,
-  resetAt: getNextMidnightET()
+ resetAt: nextMidnightET
+
 
 };
 
@@ -339,7 +340,8 @@ if (genState.resetAt && Date.now() > genState.resetAt) {
   genState = {
     count: 0,
     tipShown: false,
-    resetAt: getNextMidnightET()
+    resetAt: nextMidnightET
+
 
   };
   saveState();
@@ -519,6 +521,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
