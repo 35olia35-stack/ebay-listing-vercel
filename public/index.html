@@ -311,6 +311,14 @@ btn.addEventListener('click', () => {
   fbq('track', 'Lead');
 });
 
+function getNextMidnightET() {
+  const now = new Date();
+  const etNow = new Date(
+    now.toLocaleString('en-US', { timeZone: 'America/New_York' })
+  );
+  etNow.setHours(24, 0, 0, 0);
+  return etNow.getTime();
+}
 
 let genState = JSON.parse(localStorage.getItem('genState')) || {
   count: 0,
@@ -507,6 +515,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
