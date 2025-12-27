@@ -468,9 +468,9 @@ localStorage.setItem('genLimit', String(Number(localStorage.getItem('genLimit'))
         const isFacebook = /FBAN|FBAV|Instagram/i.test(navigator.userAgent);
 
 if (isFacebook) {
-  window.location.href = '/preview_free.html';
+  window.location.href = '/preview.html';
 } else {
-  window.open('/preview_free.html', '_blank');
+  window.open('/preview.html', '_blank');
 }
 
 
@@ -506,6 +506,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
