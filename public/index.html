@@ -327,7 +327,8 @@ if (genState.resetAt && Date.now() > genState.resetAt) {
   genState = {
     count: 0,
     tipShown: false,
-    resetAt: Date.now() + 24 * 60 * 60 * 1000
+    resetAt: getNextMidnightET()
+
   };
   saveState();
 }
@@ -506,6 +507,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
