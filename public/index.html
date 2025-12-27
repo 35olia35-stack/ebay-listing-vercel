@@ -314,9 +314,13 @@ btn.addEventListener('click', () => {
 function getNextMidnightET() {
   const now = new Date();
 
-  const etNow = new Date(
-    now.toLocaleString('en-US', { timeZone: 'America/New_York' })
-  );
+ return new Date(
+  etNow.getFullYear(),
+  etNow.getMonth(),
+  etNow.getDate() + 1,
+  0, 0, 0, 0
+).getTime();
+
 
   return new Date(
     etNow.getFullYear(),
@@ -523,6 +527,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
