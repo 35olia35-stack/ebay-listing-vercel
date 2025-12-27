@@ -311,16 +311,17 @@ btn.addEventListener('click', () => {
   fbq('track', 'Lead');
 });
 
-function getNextMidnightET() {
-  const now = new Date();
+const etNowString = new Date().toLocaleString('en-US', {
+  timeZone: 'America/New_York',
+  hour12: false
+});
 
-  const etNow = new Date(
-    now.toLocaleString('en-US', { timeZone: 'America/New_York' })
-  );
+const [etDate] = etNowString.split(', ');
+const [etMonth, etDay, etYear] = etDate.split('/').map(Number);
 
-  etNow.setHours(24, 0, 0, 0);
-  return etNow.getTime();
-}
+const nextMidnightET =
+  Date.UTC(etYear, etMonth - 1, etDay + 1, 0, 0, 0);
+
 
 let genState = JSON.parse(localStorage.getItem('genState')) || {
   count: 0,
@@ -518,6 +519,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
