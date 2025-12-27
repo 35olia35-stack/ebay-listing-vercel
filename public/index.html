@@ -314,21 +314,15 @@ btn.addEventListener('click', () => {
 function getNextMidnightET() {
   const now = new Date();
 
- return new Date(
-  etNow.getFullYear(),
-  etNow.getMonth(),
-  etNow.getDate() + 1,
-  0, 0, 0, 0
-).getTime();
+ etNow.setHours(24, 0, 0, 0);
+return etNow.getTime();
 
 
-  return new Date(
-    etNow.getFullYear(),
-    etNow.getMonth(),
-    etNow.getDate() + 1,
-    0, 0, 0, 0
-  ).getTime();
-}
+
+ const etNow = new Date(
+  now.toLocaleString('en-US', { timeZone: 'America/New_York' })
+);
+
 
 
 let genState = JSON.parse(localStorage.getItem('genState')) || {
@@ -527,6 +521,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
