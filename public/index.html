@@ -323,7 +323,8 @@ function getNextMidnightET() {
 let genState = JSON.parse(localStorage.getItem('genState')) || {
   count: 0,
   tipShown: false,
-  resetAt: Date.now() + 24 * 60 * 60 * 1000
+  resetAt: getNextMidnightET()
+
 };
 
 
@@ -515,6 +516,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
