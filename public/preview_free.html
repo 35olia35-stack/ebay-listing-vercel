@@ -139,40 +139,10 @@ hr{
 
 <hr>
 
-<div class="service">
-  <h3>Pay with PayPal</h3>
-  <div class="paypal-price" id="priceLine">
-  One-time payment: <b id="priceValue">$2.99</b>
-</div>
-
- <div id="paypal-button-container"></div>
-<script src="https://www.paypal.com/sdk/js?client-id=BAAEBGOeXBvIhKB8RxL90vF6hGnQGTLnbUiLiJBiRH_31tCQA7qi6axO2nTGg9lcbwXb16fgFQluu9P6Xs&currency=USD"></script>
-<script>
-paypal.Buttons({
-  createOrder: (data, actions) => {
-    return actions.order.create({
-      purchase_units: [{
-        amount: {
-          value: document
-            .getElementById('priceValue')
-            .textContent
-            .replace('$','')
-        }
-      }]
-    });
-  },
-  onApprove: (data, actions) => {
-    return actions.order.capture().then(() => {
-      localStorage.setItem('paidToken', '1');
-      location.reload(); // ← важно
-    });
-  }
-}).render('#paypal-button-container');
-</script>
 
 
 
-  <button class="download-btn" id="downloadBtn" disabled>Download your listing</button>
+  <button class="download-btn" id="downloadBtn">Download your listing</button>
 </div>
 
 <div class="service">
