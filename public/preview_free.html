@@ -552,28 +552,9 @@ else if(tpl==='seo'){ area.innerHTML = fillTemplate(SEO, merged); buildButtons(t
 else area.innerHTML = '<b>Error: template not specified</b>';
 
 
-
-
-const isPaid = localStorage.getItem('paidToken');
-const isAdmin = localStorage.getItem('admin_preview_unlock') === '1';
-
-document.getElementById('downloadBtn').disabled = !(isPaid || isAdmin);
-
-
-
-
-
-
-
-
-
-
-
 downloadBtn.onclick = async () => {
  
 
-  
-  if (downloadBtn.disabled) return;
 
   const zip = new JSZip();
   const styles = getComputedStyle(document.documentElement);
