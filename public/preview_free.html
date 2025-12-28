@@ -557,7 +557,8 @@ else area.innerHTML = '<b>Error: template not specified</b>';
 const isPaid = localStorage.getItem('paidToken');
 const isAdmin = localStorage.getItem('admin_preview_unlock') === '1';
 
-downloadBtn.disabled = !(isPaid || isAdmin);
+document.getElementById('downloadBtn').disabled = !(isPaid || isAdmin);
+
 
 
 
