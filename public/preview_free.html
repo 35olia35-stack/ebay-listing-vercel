@@ -222,7 +222,11 @@ const PRICE_BY_TPL = {
 };
 
 const price = PRICE_BY_TPL[tpl] ?? 2.99;
-document.getElementById('priceValue').textContent = `$${price.toFixed(2)}`;
+const priceEl = document.getElementById('priceValue');
+if (priceEl) {
+  priceEl.textContent = `$${price.toFixed(2)}`;
+}
+
 
 
 
