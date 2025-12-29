@@ -314,17 +314,28 @@ btn.addEventListener('click', () => {
 });
 const FREE_LIMIT = 12;
 let usage = JSON.parse(localStorage.getItem('usage')) || { freeUsed: 0 };
-if (usage.freeUsed >= FREE_LIMIT) { btn.textContent = 'Upgrade to Unlimited — $4.99/month'; }
+const paidUntil = Number(localStorage.getItem('paidUntil') || 0);
+const isPaid = paidUntil > Date.now();
+
+  if (new URLSearchParams(location.search).get('paid') === '1') {
+  localStorage.setItem('paidUntil', String(Date.now() + 30 * 24 * 60 * 60 * 1000));
+  history.replaceState({}, '', location.pathname);
+}
+
+ if (!isPaid && usage.freeUsed >= FREE_LIMIT) {
+  btn.textContent = 'Upgrade to Unlimited — $4.99/month';
+}
+
 
 
 // ===== After successful generation =====
 
 document.getElementById('generateBtn').addEventListener('click', () => {
-if (usage.freeUsed >= FREE_LIMIT) {
+if (!isPaid && usage.freeUsed >= FREE_LIMIT) {
   showUpgradePopup();
-
   return;
 }
+
 
 
   const btn = document.getElementById('generateBtn');
