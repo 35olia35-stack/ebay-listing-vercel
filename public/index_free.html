@@ -326,6 +326,11 @@ const isPaid = paidUntil > Date.now();
   btn.textContent = 'Upgrade to Unlimited — $4.99/month';
 }
 if (isPaid) {
+  btn.disabled = false;
+  btn.classList.remove('loading');
+}
+
+ if (isPaid) {
   btn.textContent = 'Generate preview';
 }
 
@@ -404,8 +409,10 @@ btn.disabled = false;
   alert('AI generation failed. Check Console.');
 });
 function showUpgradePopup() {
+  if (isPaid) return;
   document.getElementById('upgradePopup').style.display = 'block';
 }
+
 
 function closeUpgradePopup() {
   document.getElementById('upgradePopup').style.display = 'none';
