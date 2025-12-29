@@ -325,6 +325,9 @@ const isPaid = paidUntil > Date.now();
  if (!isPaid && usage.freeUsed >= FREE_LIMIT) {
   btn.textContent = 'Upgrade to Unlimited — $4.99/month';
 }
+if (isPaid) {
+  btn.textContent = 'Generate preview';
+}
 
 
 
@@ -375,8 +378,11 @@ fetch('/api/generate', {
 
   const json = await res.json();
   localStorage.setItem('listingData', JSON.stringify(json));
-usage.freeUsed += 1;
-localStorage.setItem('usage', JSON.stringify(usage));
+if (!isPaid) {
+  usage.freeUsed += 1;
+  localStorage.setItem('usage', JSON.stringify(usage));
+}
+
 
   btn.disabled = true;
 
