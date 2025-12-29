@@ -314,13 +314,15 @@ btn.addEventListener('click', () => {
 });
 const FREE_LIMIT = 12;
 let usage = JSON.parse(localStorage.getItem('usage')) || { freeUsed: 0 };
-const paidUntil = Number(localStorage.getItem('paidUntil') || 0);
-const isPaid = paidUntil > Date.now();
 
-  if (new URLSearchParams(location.search).get('paid') === '1') {
+if (new URLSearchParams(location.search).get('paid') === '1') {
   localStorage.setItem('paidUntil', String(Date.now() + 30 * 24 * 60 * 60 * 1000));
   history.replaceState({}, '', location.pathname);
 }
+
+const paidUntil = Number(localStorage.getItem('paidUntil') || 0);
+const isPaid = paidUntil > Date.now();
+
 
  if (!isPaid && usage.freeUsed >= FREE_LIMIT) {
   btn.textContent = 'Upgrade to Unlimited — $4.99/month';
