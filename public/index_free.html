@@ -310,10 +310,18 @@ const btn = document.getElementById('generateBtn');
 btn.addEventListener('click', () => {
   fbq('track', 'Lead');
 });
+const FREE_LIMIT = 12;
+let usage = JSON.parse(localStorage.getItem('usage')) || { freeUsed: 0 };
+if (usage.freeUsed >= FREE_LIMIT) { btn.disabled = true; btn.textContent = 'Upgrade to Unlimited — $4.99/month'; }
 
 // ===== After successful generation =====
 
 document.getElementById('generateBtn').addEventListener('click', () => {
+if (usage.freeUsed >= FREE_LIMIT) {
+  showUpgradePopup();
+
+  return;
+}
 
 
   const btn = document.getElementById('generateBtn');
@@ -353,6 +361,8 @@ fetch('/api/generate', {
 
   const json = await res.json();
   localStorage.setItem('listingData', JSON.stringify(json));
+usage.freeUsed += 1;
+localStorage.setItem('usage', JSON.stringify(usage));
 
   btn.disabled = true;
 
@@ -371,10 +381,36 @@ if (isFacebook) {
   console.error(err);
   alert('AI generation failed. Check Console.');
 });
+function showUpgradePopup() {
+  document.getElementById('upgradePopup').style.display = 'block';
+}
+
+function closeUpgradePopup() {
+  document.getElementById('upgradePopup').style.display = 'none';
+}
+
+function goToUpgrade() {
+  window.location.href = '/pricing.html';
+}
 
 
 });
 </script>
+<div id="upgradePopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;">
+  <div style="max-width:420px;margin:20vh auto;background:#fff;padding:28px;border-radius:14px;text-align:center;font-family:Inter,sans-serif;">
+    <h3 style="margin-top:0">Free limit reached</h3>
+    <p>You’ve used all 12 free generations.</p>
+    <p style="font-weight:700">$4.99 / month — unlimited generations</p>
+    <button onclick="goToUpgrade()" style="margin-top:12px;padding:12px 18px;border:0;border-radius:10px;background:#1c686c;color:#fff;font-weight:700;cursor:pointer;">
+      Upgrade
+    </button>
+    <div style="margin-top:14px">
+      <a href="#" onclick="closeUpgradePopup()" style="font-size:13px;color:#64748b">Close</a>
+    </div>
+  </div>
+</div>
+
+
 
 </body>
 
