@@ -315,10 +315,18 @@ btn.addEventListener('click', () => {
 const FREE_LIMIT = 12;
 let usage = JSON.parse(localStorage.getItem('usage')) || { freeUsed: 0 };
 
-if (new URLSearchParams(location.search).get('paid') === '1') {
-  localStorage.setItem('paidUntil', String(Date.now() + 30 * 24 * 60 * 60 * 1000));
+const params = new URLSearchParams(location.search);
+const paidParam = params.get('paid');
+const existingPaidUntil = Number(localStorage.getItem('paidUntil') || 0);
+
+if (paidParam === '1' && existingPaidUntil < Date.now()) {
+  localStorage.setItem(
+    'paidUntil',
+    String(Date.now() + 30 * 24 * 60 * 60 * 1000)
+  );
   history.replaceState({}, '', location.pathname);
 }
+
 
 const paidUntil = Number(localStorage.getItem('paidUntil') || 0);
 const isPaid = paidUntil > Date.now();
