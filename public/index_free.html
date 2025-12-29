@@ -376,6 +376,8 @@ if (isFacebook) {
 } else {
   window.open('/preview_free.html', '_blank');
 }
+btn.classList.remove('loading');
+btn.disabled = false;
 
   });
 })
