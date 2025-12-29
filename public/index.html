@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+  if (location.pathname === '/' || location.pathname.endsWith('/index.html')) {
+    location.replace('/index_free.html');
+  }
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EKWL23CEDY"></script>
 <script>
@@ -521,6 +526,7 @@ if (genState.count >= MAX_FREE) {
 </body>
 
 </html>
+
 
 
 
