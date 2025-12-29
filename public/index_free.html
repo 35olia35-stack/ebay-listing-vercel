@@ -305,136 +305,22 @@ Optional, but strongly recommended. Helps structure the listing and item specifi
 
 <script>
 // ===== Free session state (MVP, client-side) =====
-const MAX_FREE = 50;
-const BTN_DEFAULT = 'Generate preview';
-const MSG_DELAY = 2000; // время показа сообщения на кнопке
+
 const btn = document.getElementById('generateBtn');
 btn.addEventListener('click', () => {
   fbq('track', 'Lead');
 });
 
-const etNowString = new Date().toLocaleString('en-US', {
-  timeZone: 'America/New_York',
-  hour12: false
-});
-
-const [etDate] = etNowString.split(', ');
-const [etMonth, etDay, etYear] = etDate.split('/').map(Number);
-
-const nextMidnightET =
-  Date.UTC(etYear, etMonth - 1, etDay + 1, 0, 0, 0);
-
-
-let genState = JSON.parse(localStorage.getItem('genState')) || {
-  count: 0,
-  tipShown: false,
- resetAt: nextMidnightET
-
-
-};
-
-
-function saveState(){
-  localStorage.setItem('genState', JSON.stringify(genState));
-}
-// --- auto reset after 24h ---
-if (genState.resetAt && Date.now() > genState.resetAt) {
-  genState = {
-    count: 0,
-    tipShown: false,
-    resetAt: nextMidnightET
-
-
-  };
-  saveState();
-}
-
-  
-// ===== Phases =====
-function getPhase(count){
-  if (count <= 30) return 1;
-  if (count <= 40) return 2;
-  if (count <= 47) return 3;
-  if (count <= 50) return 4;
-  return 5;
-}
-
-// ===== Temporary button message =====
-
-// ===== Phase message resolver =====
-function getPhaseMessage(phase){
-  // Фаза 2 — Tip (один раз)
-  if (phase === 2 && !genState.tipShown) {
-    genState.tipShown = true;
-    saveState();
-    return 'Tip: if you like a result, keep this tab open while refining.';
-  }
-
-  // Фаза 3
-  if (phase === 3) {
-    return 'You’re close to finishing your free session.';
-  }
-
-  // Фаза 4
-  if (phase === 4) {
-    return 'If you’re close to a version you like, this is a good moment to finalize or download.';
-  }
-
-  return null;
-}
-
 // ===== After successful generation =====
 
 document.getElementById('generateBtn').addEventListener('click', () => {
-function getGenLeft() {
-  const raw = localStorage.getItem('genLimit');
 
-  // Новый пользователь / новое устройство
-  if (raw === null) {
-    localStorage.setItem('genLimit', '50');
-    return 50;
-  }
-
-  const n = Number(raw);
-  return Number.isFinite(n) && n >= 0 ? n : 50;
-}
 
   const btn = document.getElementById('generateBtn');
-// ===== PayPal return handler =====
-if (new URLSearchParams(location.search).get('paid') === '1') {
- localStorage.setItem('paidToken', '1');
- localStorage.setItem('genLimit', '50');
-  history.replaceState({}, '', location.pathname);
-
-  // если платили из preview — вернуться обратно
-  if (sessionStorage.getItem('returnToPreview') === '1') {
-    sessionStorage.removeItem('returnToPreview');
-    window.location.href = '/preview.html';
-  }
-}
-
-  // HARD STOP before generation (51+)
-const left = getGenLeft();
-
-if (left <= 0) {
-  btn.textContent = 'Daily limit reached.Try again later.';
-  btn.disabled = true;
-  btn.title = "You've reached today's free limit.";
-  return;
-}
-
-  
 
 const tpl = document.querySelector('input[name="tpl"]:checked')?.value;
   if (!tpl) return;
-// --- показать фазовую фразу СРАЗУ ---
-const nextCount = genState.count + 1;
-const nextPhase = getPhase(nextCount);
-const instantMsg = getPhaseMessage(nextPhase);
 
-if (instantMsg) {
-  btn.textContent = instantMsg;
-}
 btn.disabled = true;
 btn.classList.add('loading');
 
@@ -467,16 +353,7 @@ fetch('/api/generate', {
 
   const json = await res.json();
   localStorage.setItem('listingData', JSON.stringify(json));
-localStorage.setItem('genLimit', String(Number(localStorage.getItem('genLimit')) - 1));
 
-  genState.count++;
-  saveState();
-
-  const phase = getPhase(genState.count);
-  const msg = getPhaseMessage(phase);
-  const finalMsg = msg || 'Preparing preview...';
-
-  btn.textContent = finalMsg;
   btn.disabled = true;
 
   requestAnimationFrame(() => {
@@ -490,24 +367,7 @@ if (isFacebook) {
   window.open('/preview_free.html', '_blank');
 }
 
-
-
-
-       // DEV MODE: disable daily limit
-// FINAL: enforce daily limit
-btn.classList.remove('loading');
-
-if (genState.count >= MAX_FREE) {
-  btn.textContent = 'Come back tomorrow';
-  btn.disabled = true;
-  btn.title = "You've reached today's free limit.";
-} else {
-  btn.textContent = BTN_DEFAULT;
-  btn.disabled = false;
-}
-
-
-      }, MSG_DELAY);
+   
     });
   });
 })
