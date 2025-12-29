@@ -314,7 +314,8 @@ btn.addEventListener('click', () => {
 });
 const FREE_LIMIT = 12;
 let usage = JSON.parse(localStorage.getItem('usage')) || { freeUsed: 0 };
-if (usage.freeUsed >= FREE_LIMIT) { btn.disabled = true; btn.textContent = 'Upgrade to Unlimited — $4.99/month'; }
+if (usage.freeUsed >= FREE_LIMIT) { btn.textContent = 'Upgrade to Unlimited — $4.99/month'; }
+
 
 // ===== After successful generation =====
 
