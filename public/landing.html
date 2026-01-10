@@ -97,14 +97,14 @@
     .hero{
       display:grid;
       grid-template-columns: .75fr 1.25fr;
-
-
-
-
       gap: 18px;
       align-items: start;
       margin-top: 8px;
     }
+    .hero > div:last-child{
+  margin-top: 48px;
+}
+
     @media (max-width: 960px){
       .hero{ grid-template-columns: 1fr; }
     }
