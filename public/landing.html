@@ -318,10 +318,11 @@
 </div>
 
 
-        <div class="ctaRow">
-          <a class="btn btnPrimary" href="/index_free.html">Попробовать генератор</a>
-          <a class="btn btnGhost" href="#demo">Смотреть демо</a>
-        </div>
+       <div class="ctaRow">
+  <a class="btn btnPrimary" href="/index_free.html">Создать описание</a>
+  <button class="btn btnGhost" type="button" id="playDemo">Смотреть демо</button>
+</div>
+
 
         <p class="hint" style="margin-top:10px;">
           Подходит начинающим и “не очень опытным” селлерам: меньше хаоса, больше структуры.
@@ -350,13 +351,16 @@
                Пример: https://www.youtube.com/watch?v=AbCdEfGhIJK
                ID = AbCdEfGhIJK
           -->
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/UGmYK-PJbXs"
-            title="Демо сервиса"
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen>
-          </iframe>
+         <iframe
+  id="demoFrame"
+  data-src-base="https://www.youtube-nocookie.com/embed/UGmYK-PJbXs?rel=0"
+  src="https://www.youtube-nocookie.com/embed/UGmYK-PJbXs?rel=0"
+  title="Демо сервиса"
+  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allowfullscreen>
+</iframe>
+
         </div>
 
         <p class="foot">
@@ -405,6 +409,23 @@
     </div>
   </div>
 
+<script>
+  (function () {
+    const btn = document.getElementById('playDemo');
+    const card = document.getElementById('demo');
+    const frame = document.getElementById('demoFrame');
+    if (!btn || !card || !frame) return;
+
+    btn.addEventListener('click', function () {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      const base = frame.getAttribute('data-src-base') || frame.src;
+      if (!frame.src.includes('autoplay=1')) {
+        frame.src = base + (base.includes('?') ? '&' : '?') + 'autoplay=1&mute=1';
+      }
+    });
+  })();
+</script>
 
 </body>
 </html>
