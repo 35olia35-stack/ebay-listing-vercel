@@ -129,23 +129,35 @@
     }
     .ctaRow .btn{ flex: 1; justify-content: center; }
 button.btn{
-  font-family: inherit;
-  font-weight: inherit;
+  font: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
 }
 
 
+
     .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-weight: 750;
-      text-decoration:none;
-      border:1px solid transparent;
-      cursor:pointer;
-      user-select:none;
-    }
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: inherit;
+
+  text-decoration:none;
+  border:1px solid transparent;
+  cursor:pointer;
+  user-select:none;
+}
+
     .btnPrimary{
   background: rgba(255,255,255,.12);
   border:1px solid var(--line);
